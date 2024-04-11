@@ -12,7 +12,6 @@ from dataset import FashionNet_Dataset
 
 
 # VISUALIZATION
-
 def plot_loss_acc(train_loss, val_loss, train_acc, val_acc, fig_name):
     x = np.arange(len(train_loss))
     max_loss = max(max(train_loss), max(val_loss))
@@ -105,9 +104,7 @@ def get_test_loader(dataset_dir, batch_size, pin_memory=True, num_workers=2):
 
     return test_loader
 
-
 # METRICS
-
 def unwrap_and_calc_loss(logits, labels, criterion_weights, num_classes, smoothing=0.0):
     bin_counter = 0
     loss = 0
@@ -140,10 +137,6 @@ def compute_avg_class_acc(gt_labels, pred_labels):
 
     return sum(per_class_acc) / len(per_class_acc)
 
-
-
-# TUNING
-
 def calc_mean_std(loader):
 
     # From lecture notes
@@ -161,18 +154,6 @@ def calc_mean_std(loader):
     std = (channels_squared_sum / num_batches - mean**2)**0.5
 
     return mean, std
-
-# def get_data_mean_std(dataset_dir, batch_size, shuffle, seed, pin_memory=True, num_workers=2):
-    
-#     transform = transforms.Compose([
-#         transforms.ToTensor()
-#     ])
-
-#     raw_dataset = datasets.CIFAR100(dataset_dir, train=True, download=False, transform=transform)
-#     raw_loader = DataLoader(raw_dataset, batch_size=batch_size, num_workers=num_workers, pin_memory=pin_memory)
-#     mean, std = calc_mean_std(raw_loader)
-
-#     return mean, std
 
 def one_hot_encode(tensor):
     # Define the maximum values for each index
@@ -216,7 +197,10 @@ def calc_distribution(loader, device):
     # Print the counts
     print(counts)
 
-    return counts
+    counts_inv = torch.pow(counts, -1)
+    criterion_weights = (counts_inv * 5000.0) / 220.0
+
+    return counts, criterion_weights
 
 
 

@@ -21,7 +21,6 @@ class CustomResNet(nn.Module):
     
     def forward(self, x):
         return self.model(x)
-    
 
 class CustomSEResNeXt(nn.Module):
     def __init__(self, num_classes=26):
