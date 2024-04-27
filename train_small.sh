@@ -3,7 +3,7 @@
 #SBATCH --qos=q_amsai
 #SBATCH --nodes=1 
 #SBATCH --gres=gpu:1 
-#SBATCH --mem=25G 
+#SBATCH --mem=12G 
 #SBATCH --cpus-per-task=5
 #SBATCH --job-name=DLProj-small
 #SBATCH --output=results/output_%x_%j.out
@@ -17,14 +17,21 @@ export CUBLAS_WORKSPACE_CONFIG=:16:8
 
 python main.py \
 --dataset_dir './FashionDataset/' \
---batch_size 256 \
---epochs 5 \
---lr_scheduler \
---lr 0.007 --wd 0.001 \
---dropout_p 0.5 \
---smoothing 0.001 \
 --seed 0 \
---fig_name bs=256-epoch=5-lr_sch-lr_warmup-wd=0.001-lr=0.007-dropout=0.5-new_data_augments-smoothing=0.001.png \
---tuning_optuna \
-#--test \
-#--test_tag 'lower_smoothing' \
+--batch_size 256 \
+--epochs 60 \
+--lr_scheduler \
+--lr 0.009452847508848424 --wd 0.000887541785266803 \
+--smoothing 0.0 \
+--fig_name lr-wd-smoothing.png \
+--tuning_optuna --n_trials 4 --trial_epochs 25 \
+--test \
+
+# --dropout_p 0.5 \
+# --wd 0.001
+
+## Regularizers
+# lr_scheduler / wd
+# dropout
+# smoothing
+# data augmentation

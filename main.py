@@ -21,60 +21,71 @@ from model import CustomResNet, CustomSEResNeXt, CustomSEResNeXt_v2
 from train_functions import train, evaluate, test, training_loop
 
 # Optuna Tuning Objective
-def objective(trial, args, model):
+def objective(trial, args):
 
     # Define parameter trial space
     # Optuna will heuristically select a value from within this range to test for every trial
     # options: trial.suggest_float(), trial.suggest_int(), trial.suggest_categorical(), etc.
     params = {
-        'smoothing': trial.suggest_float('smoothing', 1e-3, 1e-2), # (variable, start, end)
-        'batch_size': trial.suggest_int('batch_size', 64, 512)
+        'smoothing': trial.suggest_float('smoothing', 1e-4, 1e-2)
     }
 
-    # Training Loop
-    (stat_training_loss, stat_val_loss, stat_training_acc, stat_val_acc) = training_loop(args, 
-                                                                                         model, 
-                                                                                         print_info = False, 
-                                                                                         save_checkpoints = False,
-                                                                                         **params)
+    # Define Model
+    model = CustomSEResNeXt_v2(dropout_p=args.dropout_p)
+    model.cuda()
 
-    return stat_val_loss[-1]
+    torch.manual_seed(args.seed)
+    np.random.seed(args.seed)
+
+    # Training Loop
+    (stat_training_loss, stat_val_loss, stat_training_acc, stat_val_acc), _ = training_loop(args, 
+                                                                                            model,
+                                                                                            epochs = args.trial_epochs,
+                                                                                            print_info = False, 
+                                                                                            save_checkpoints = False,
+                                                                                            **params)
+
+    return np.mean(stat_val_loss[-5:])
 
 def main(args):
 
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
 
-    # Define Model
-    model = CustomSEResNeXt_v2(dropout_p=args.dropout_p)
-    model.cuda()
+    # Device
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     # Call Optuna
     if args.tuning_optuna:
         study = optuna.create_study(study_name='regularization', direction="minimize", sampler=optuna.samplers.TPESampler())
-        study.optimize(lambda trial: objective(trial, args, model), n_trials=5)
+        study.optimize(lambda trial: objective(trial, args), n_trials=args.n_trials)
 
         print(study.best_params)
         best_params = study.best_params
     else:
-        best_params = {}
+        # Manually input best_params here if not tuning
+        best_params = {'lr':args.lr}
     # End of Optuna
 
+    # Define Model
+    model = CustomSEResNeXt_v2(dropout_p=args.dropout_p)
+    model.cuda()
+
     # Training Loop
-    (stat_training_loss, stat_val_loss, stat_training_acc, stat_val_acc) = training_loop(args, 
-                                                                                         model,
-                                                                                         print_params = True,
-                                                                                         print_info = True
-                                                                                         print_train_progress = True, 
-                                                                                         save_checkpoints = True, 
-                                                                                         **best_params)
+    (stat_training_loss, stat_val_loss, stat_training_acc, stat_val_acc), criterion_weights = training_loop(args, 
+                                                                                                            model,
+                                                                                                            epochs = args.epochs,
+                                                                                                            print_params = True,
+                                                                                                            print_info = True,
+                                                                                                            print_train_progress = True, 
+                                                                                                            save_checkpoints = True, 
+                                                                                                            **best_params)
 
     # Test Data
     if args.test:
         test_loader = get_test_loader(args.dataset_dir, args.batch_size)
-        model_checkpoint = './model_weights/<filename of model checkpoint goes here>.pt'
-        preds = test(args, model, test_loader, model_checkpoint, criterion_weights)
-        print(f"Test Predictions generated at prediction.txt")
+        test_loss, test_acc = evaluate(model, test_loader, criterion_weights, device)
+        print(f"\n~ Inference Results ~\n Test Loss: {test_loss} | Test Acc: {test_acc}")
 
 
 if __name__ == '__main__':
@@ -84,6 +95,8 @@ if __name__ == '__main__':
     parser.add_argument('--dataset_dir',type=str, help='')
     parser.add_argument('--test_tag',type=str, default='0', help='')
     parser.add_argument('--batch_size',type=int, help='')
+    parser.add_argument('--n_trials',type=int, default=1, help='')
+    parser.add_argument('--trial_epochs',type=int, default=10, help='')
     parser.add_argument('--epochs', type=int, help='')
     parser.add_argument('--lr',type=float, help='')
     parser.add_argument('--wd',type=float, help='')

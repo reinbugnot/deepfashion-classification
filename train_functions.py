@@ -73,6 +73,8 @@ def evaluate(model, dataloader, criterion_weights, device):
 
 def test(args, model, test_loader, model_checkpoint, criterion_weights):
 
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
     model.load_state_dict(torch.load(model_checkpoint))
     model.eval()
 
@@ -90,8 +92,11 @@ def test(args, model, test_loader, model_checkpoint, criterion_weights):
 
     return logits_converted
 
-def training_loop(args, model, print_params = True, print_info = True, print_train_progress = True, save_checkpoints = True, **kwargs):
+def training_loop(args, model, epochs = 10, print_params = True, print_info = True, print_train_progress = True, save_checkpoints = True, **kwargs):
 
+    torch.manual_seed(args.seed)
+    np.random.seed(args.seed)
+    
     ## =========  Set Hyperparameters =========  ##
 
     # Regularization
@@ -125,9 +130,9 @@ def training_loop(args, model, print_params = True, print_info = True, print_tra
 
     # Learning Rate Scheduling
     if args.lr_scheduler:
-        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, args.epochs)
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, epochs)
     else:
-        scheduler = torch.optim.lr_scheduler.ConstantLR(optimizer, factor=1.0, total_iters=args.epochs)
+        scheduler = torch.optim.lr_scheduler.ConstantLR(optimizer, factor=1.0, total_iters=epochs)
 
     # Learning Rate Warm-up
     warmup_scheduler = warmup.LinearWarmup(optimizer, 5)
@@ -152,7 +157,7 @@ def training_loop(args, model, print_params = True, print_info = True, print_tra
     best_val_acc = float('-inf')
     best_val_loss = float('inf')
 
-    for epoch in range(args.epochs):
+    for epoch in range(epochs):
         train_loss, train_acc =  train(model, train_loader, criterion_weights, optimizer, device, smoothing)
         val_loss, val_acc = evaluate(model, valid_loader, criterion_weights, device)
 
@@ -160,14 +165,14 @@ def training_loop(args, model, print_params = True, print_info = True, print_tra
             best_val_acc = val_acc
 
             if save_checkpoints:
-                model_name_acc = f'./model_weights/acc/model_{args.fig_name}_acc.pt'
+                model_name_acc = f'./model_weights/acc/model_{args.fig_name[:-4]}_acc.pt'
                 torch.save(model.state_dict(), model_name_acc)
 
         if val_loss < best_val_loss:
             best_val_loss = val_loss
 
             if save_checkpoints:
-                model_name_loss = f'./model_weights/loss/model_{args.fig_name}_loss.pt'
+                model_name_loss = f'./model_weights/loss/model_{args.fig_name[:-4]}_loss.pt'
                 torch.save(model.state_dict(), model_name_loss)
 
         # Record Accuracy and loss
@@ -186,10 +191,10 @@ def training_loop(args, model, print_params = True, print_info = True, print_tra
 
     # Save Final Model
     if save_checkpoints:
-        model_name_final = f'./model_weights/final/model_{args.fig_name}_final.pt'
+        model_name_final = f'./model_weights/final/model_{args.fig_name[:-4]}_final.pt'
         torch.save(model.state_dict(), model_name_final)
 
     ## ========== Plot ========== ##
     plot_loss_acc(stat_training_loss, stat_val_loss, stat_training_acc, stat_val_acc, args.fig_name)
 
-    return (stat_training_loss, stat_val_loss, stat_training_acc, stat_val_acc)
+    return (stat_training_loss, stat_val_loss, stat_training_acc, stat_val_acc), criterion_weights

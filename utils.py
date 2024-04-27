@@ -49,11 +49,11 @@ def get_train_valid_loader(dataset_dir, batch_size, shuffle, save_images=False, 
     # Transform Parameters
     train_transform = transforms.Compose([
         transforms.Resize([224, 224]), # Resize
-        transforms.CenterCrop([200, 160]), # Crop Center (to eliminate white background)
+        transforms.CenterCrop([200, 170]), # Zoom-in
         transforms.Resize([224, 224]), # Resize Again
-        transforms.RandomHorizontalFlip(p=0.5),
         transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.3, hue=0.3),
         transforms.RandomAffine(degrees=15, translate=(0.1, 0.1), scale=(0.5, 1.5), shear=15),
+        transforms.RandomHorizontalFlip(p=0.5),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
