@@ -1,1 +1,0 @@
-# deepfashion-classification

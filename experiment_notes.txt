@@ -1,4 +1,0 @@
-small_28159 - no regularization
-large_28160 - weight decay
-small_28185 - label smoothing
-large_28193 - data_aug
