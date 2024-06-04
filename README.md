@@ -1,8 +1,8 @@
-# Project Title
+# Using Synthetic Image Generation for Maximizing the Performance of a Multi-label, Multi-class Image Classification Model
 
 ## Description
 
-Brief description of your project and what it aims to achieve.
+This is the final group project for the AI6103: Deep Learning and Applications class in Nanyang Technological University, Singapore, 2024. Here, we performed a multi-label, multi-class classification task using the [DeepFashion Dataset](https://mmlab.ie.cuhk.edu.hk/projects/DeepFashion/AttributePrediction.html) by fine-tuning a pre-trained ResNeXt model. To optimize the model's performance, we employed Optuna, a hyper-parameter tuning framework, to identify the best combination of various hyper-parameters. In addition to traditional data augmentation techniques, we devised an innovative method to synthesize new images: utilizing a diffusion model trained on the given dataset to generate additional images for underrepresented classes, thereby balancing the dataset. Our experimental results demonstrated that this approach was effective in improving model performance.
 
 ## Getting Started
 
@@ -27,7 +27,7 @@ mkdir diagram
 ```
 
 ### Download the Dataset
-Download the DeepFashion dataset for attribute prediction from the ![official website](https://mmlab.ie.cuhk.edu.hk/projects/DeepFashion/AttributePrediction.html). Once downloaded, place the FashionDataset/ folder in the root directory of the project.
+Download the DeepFashion dataset for attribute prediction from the [official website](https://mmlab.ie.cuhk.edu.hk/projects/DeepFashion/AttributePrediction.html). Once downloaded, place the FashionDataset/ folder in the root directory of the project.
 
 ### Installing Dependencies
 
@@ -65,6 +65,8 @@ We welcome contributions to this project. To contribute, follow these steps:
 7. Please make sure your code follows our coding standards and includes tests for any new features.
 
 ### Acknowldegements
+
+This project is a team-effort with my colleagues from the AI6103 - Deep Learning and Applications class in the NTU MSAI program, 2024.
 
 - [Syed Anas Majid](https://github.com/modestscriptor)
 - [Xiang Xinye](https://github.com/Sherlock-Watson)
