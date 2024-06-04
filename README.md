@@ -4,6 +4,8 @@
 
 This is the final group project for the AI6103: Deep Learning and Applications class in Nanyang Technological University, Singapore, 2024. Here, we performed a multi-label, multi-class classification task using the [DeepFashion Dataset](https://mmlab.ie.cuhk.edu.hk/projects/DeepFashion/AttributePrediction.html) by fine-tuning a pre-trained ResNeXt model. To optimize the model's performance, we employed Optuna, a hyper-parameter tuning framework, to identify the best combination of various hyper-parameters. In addition to traditional data augmentation techniques, we devised an innovative method to synthesize new images: utilizing a diffusion model trained on the given dataset to generate additional images for underrepresented classes, thereby balancing the dataset. Our experimental results demonstrated that this approach was effective in improving model performance.
 
+![img](https://github.com/reinbugnot/deepfashion-classification/blob/main/synth.png)
+
 ## Getting Started
 
 ### Prerequisites
