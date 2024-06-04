@@ -50,7 +50,7 @@ sbatch train_large.sh
 
 • Without SLURM:
 Run the main Python script directly.
-```
+```python
 python main.py \
 --dataset_dir './FashionDataset/' \
 --seed 0 \
