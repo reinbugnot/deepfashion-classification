@@ -1,6 +1,6 @@
 # Using Synthetic Image Generation for Maximizing the Performance of a Multi-label, Multi-class Image Classification Model
 
-[![Paper](https://img.shields.io/badge/Paper-Link%20to%20my%20paper-brightgreen)](https://github.com/reinbugnot/deepfashion-classification/blob/main/Final%20Project%20-%20Using%20Synthetic%20Image%20Generation%20for%20Maximizing%20Model%20Performance.pdf)
+[![Paper](https://img.shields.io/badge/Paper-Link%20to%20paper-brightgreen)](https://github.com/reinbugnot/deepfashion-classification/blob/main/Final%20Project%20-%20Using%20Synthetic%20Image%20Generation%20for%20Maximizing%20Model%20Performance.pdf)
 ![img](https://github.com/reinbugnot/deepfashion-classification/blob/main/synth.png)
 
 
