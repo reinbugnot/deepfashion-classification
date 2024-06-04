@@ -43,13 +43,13 @@ pip install -r requirements.txt
 You can run the training script using SLURM or directly with Python:
 
 • Using SLURM:
-Run the provided train_large.sh script or write your own bash script.
+Run the provided train_small.sh script or customize your own bash script.
 ```
-sbatch train_large.sh
+sbatch train_small.sh
 ```
 
 • Without SLURM:
-Run the main Python script directly.
+Run the main Python script directly via CLI.
 ```python
 python main.py \
 --dataset_dir './FashionDataset/' \
@@ -65,21 +65,9 @@ python main.py \
 --tuning_optuna --n_trials 15 --trial_epochs 30 \
 ```
 
-### Contributing
-
-We welcome contributions to this project. To contribute, follow these steps:
-
-1. Fork the repository.
-2. Create a new branch (git checkout -b feature-branch).
-3. Make your changes.
-4. Commit your changes (git commit -m 'Add some feature').
-5. Push to the branch (git push origin feature-branch).
-6. Create a new Pull Request.
-7. Please make sure your code follows our coding standards and includes tests for any new features.
-
 ### Acknowldegements
 
-This project is a team-effort with my colleagues from the AI6103 - Deep Learning and Applications class in the NTU MSAI program, 2024.
+This project is a team-effort with my awesome colleagues from the AI6103 - Deep Learning and Applications class in the NTU MSAI program, 2024. Checkout their github profiles at:
 
 - [Syed Anas Majid](https://github.com/modestscriptor)
 - [Xiang Xinye](https://github.com/Sherlock-Watson)
