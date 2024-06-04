@@ -27,7 +27,9 @@ mkdir diagram
 ```
 
 ### Download the Dataset
-Download the DeepFashion dataset for attribute prediction from the [official website](https://mmlab.ie.cuhk.edu.hk/projects/DeepFashion/AttributePrediction.html). Once downloaded, place the FashionDataset/ folder in the root directory of the project.
+Download the DeepFashion dataset for attribute prediction from the [official website](https://mmlab.ie.cuhk.edu.hk/projects/DeepFashion/AttributePrediction.html). 
+
+Once downloaded, place the FashionDataset/ folder in the root directory of the project.
 
 ### Installing Dependencies
 
@@ -36,7 +38,7 @@ Install the required libraries using requirements.txt:
 pip install -r requirements.txt
 ```
 
-### Running the Project
+## Running the Project
 
 You can run the training script using SLURM or directly with Python:
 
