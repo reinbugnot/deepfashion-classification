@@ -2,3 +2,8 @@ small_28159 - no regularization
 large_28160 - weight decay
 small_28185 - label smoothing
 large_28193 - data_aug
+small_28215 - smooth + aug
+large_28229 - dropout
+small_28267 - batch_size
+large_28301 - brute force all
+small_28303 - brute force with adam

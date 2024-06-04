@@ -92,7 +92,7 @@ def test(args, model, test_loader, model_checkpoint, criterion_weights):
 
     return logits_converted
 
-def training_loop(args, model, epochs = 10, print_params = True, print_info = True, print_train_progress = True, save_checkpoints = True, **kwargs):
+def training_loop(args, epochs = 10, print_params = True, print_info = True, print_train_progress = True, save_checkpoints = True, **kwargs):
 
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
@@ -102,22 +102,34 @@ def training_loop(args, model, epochs = 10, print_params = True, print_info = Tr
     # Regularization
     smoothing = kwargs.get('smoothing', args.smoothing)
     weight_decay = kwargs.get('wd', args.wd)
+    dropout_p = kwargs.get('dropout_p', args.dropout_p)
 
     # Optimization
     learning_rate = kwargs.get('lr', args.lr)
     batch_size = kwargs.get('batch_size', args.batch_size)
+    beta1 = kwargs.get('beta1', args.beta1)
+    beta2 = kwargs.get('beta2', args.beta2)
+    epsilon = kwargs.get('epsilon', args.epsilon)
 
     if print_params:
         print("\nHYPERPARAMETERS --")
         print(f'Smoothing: {smoothing}')
         print(f'Weight Decay: {weight_decay}')
+        print(f'Dropout: {dropout_p}')
         print(f'Learning Rate: {learning_rate}')
         print(f'Batch Size: {batch_size}')
+        print(f'Adam Beta1: {beta1}')
+        print(f'Adam Beta2: {beta2}')
+        print(f'Adam Epsilon: {epsilon}')
 
     ## ========= Define Training Objects =========  ##
 
     # Device
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+    # Define model
+    model = CustomSEResNeXt_v2(dropout_p=dropout_p)
+    model.cuda()
 
     # Data Loader
     train_loader, valid_loader = get_train_valid_loader(args.dataset_dir, batch_size, True, save_images=args.save_images)
@@ -126,7 +138,7 @@ def training_loop(args, model, epochs = 10, print_params = True, print_info = Tr
     counts, criterion_weights = calc_distribution(train_loader, device)
 
     # Optimizer
-    optimizer = Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
+    optimizer = Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay, betas = [beta1, beta2], eps = epsilon)
 
     # Learning Rate Scheduling
     if args.lr_scheduler:
@@ -197,4 +209,4 @@ def training_loop(args, model, epochs = 10, print_params = True, print_info = Tr
     ## ========== Plot ========== ##
     plot_loss_acc(stat_training_loss, stat_val_loss, stat_training_acc, stat_val_acc, args.fig_name)
 
-    return (stat_training_loss, stat_val_loss, stat_training_acc, stat_val_acc), criterion_weights
+    return (stat_training_loss, stat_val_loss, stat_training_acc, stat_val_acc), criterion_weights, model

@@ -27,19 +27,24 @@ def objective(trial, args):
     # Optuna will heuristically select a value from within this range to test for every trial
     # options: trial.suggest_float(), trial.suggest_int(), trial.suggest_categorical(), etc.
     params = {
-        'smoothing': trial.suggest_float('smoothing', 1e-4, 1e-2)
+        'batch_size': trial.suggest_int('batch_size', 64, 512),
+        'lr': trial.suggest_float('lr', 1e-4, 1e-2),
+        'wd': trial.suggest_float('wd', 1e-4, 1e-2),
+        'smoothing': trial.suggest_float('smoothing', 1e-4, 1e-2),
+        'dropout_p': trial.suggest_float('dropout_p', 0.15, 0.6),
+        'beta1': trial.suggest_float('beta1', 0.87, 0.93),
+        'beta2': trial.suggest_float('beta2', 0.99, 0.99999999)
     }
 
     # Define Model
-    model = CustomSEResNeXt_v2(dropout_p=args.dropout_p)
-    model.cuda()
+    # model = CustomSEResNeXt_v2(dropout_p=args.dropout_p)
+    # model.cuda()
 
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
 
     # Training Loop
-    (stat_training_loss, stat_val_loss, stat_training_acc, stat_val_acc), _ = training_loop(args, 
-                                                                                            model,
+    (stat_training_loss, stat_val_loss, stat_training_acc, stat_val_acc), _, _ = training_loop(args, 
                                                                                             epochs = args.trial_epochs,
                                                                                             print_info = False, 
                                                                                             save_checkpoints = False,
@@ -68,18 +73,17 @@ def main(args):
     # End of Optuna
 
     # Define Model
-    model = CustomSEResNeXt_v2(dropout_p=args.dropout_p)
-    model.cuda()
+    # model = CustomSEResNeXt_v2(dropout_p=args.dropout_p)
+    # model.cuda()
 
     # Training Loop
-    (stat_training_loss, stat_val_loss, stat_training_acc, stat_val_acc), criterion_weights = training_loop(args, 
-                                                                                                            model,
-                                                                                                            epochs = args.epochs,
-                                                                                                            print_params = True,
-                                                                                                            print_info = True,
-                                                                                                            print_train_progress = True, 
-                                                                                                            save_checkpoints = True, 
-                                                                                                            **best_params)
+    (stat_training_loss, stat_val_loss, stat_training_acc, stat_val_acc), criterion_weights, model = training_loop(args, 
+                                                                                                                   epochs = args.epochs,
+                                                                                                                   print_params = True,
+                                                                                                                   print_info = True,
+                                                                                                                   print_train_progress = True, 
+                                                                                                                   save_checkpoints = True, 
+                                                                                                                   **best_params)
 
     # Test Data
     if args.test:
@@ -103,7 +107,7 @@ if __name__ == '__main__':
     parser.add_argument('--beta1', type=float, default=0.9, help='')
     parser.add_argument('--beta2', type=float, default=0.999, help='')
     parser.add_argument('--epsilon', type=float, default=1e-8, help='')
-    parser.add_argument('--dropout_p', type=float, default=0.25, help='')
+    parser.add_argument('--dropout_p', type=float, default=0.0, help='')
     parser.add_argument('--smoothing', type=float, default=0.0, help='')
     parser.add_argument('--fig_name',type=str, help='')
     parser.add_argument('--lr_scheduler', action='store_true')
