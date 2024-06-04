@@ -76,6 +76,7 @@ python main.py \
 
 This project is a team-effort with my awesome colleagues from the AI6103 - Deep Learning and Applications class in the NTU MSAI program, 2024. Checkout their github profiles at:
 
+- [Rein Bugnot](https://github.com/reinbugnot)
 - [Syed Anas Majid](https://github.com/modestscriptor)
 - [Xiang Xinye](https://github.com/Sherlock-Watson)
 
