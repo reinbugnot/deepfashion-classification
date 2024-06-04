@@ -4,20 +4,20 @@
 ![img](https://github.com/reinbugnot/deepfashion-classification/blob/main/synth.png)
 
 
-## Description
+## Description 📄
 
 This is the final group project for the AI6103: Deep Learning and Applications class in Nanyang Technological University, Singapore, 2024. Here, we performed a multi-label, multi-class classification task using the [DeepFashion Dataset](https://mmlab.ie.cuhk.edu.hk/projects/DeepFashion/AttributePrediction.html) by fine-tuning a pre-trained [SE-ResNeXt](https://huggingface.co/docs/timm/en/models/seresnext) model. To optimize the model's performance, we employed [Optuna](https://optuna.org/), a hyper-parameter tuning framework, to identify the best combination of various hyper-parameters. In addition to traditional data augmentation techniques, we devised an innovative method to synthesize new images: utilizing a diffusion model trained on the given dataset to generate additional images for underrepresented classes, thereby balancing the dataset while maintaining feature distributions. Our experimental results demonstrated that this approach was effective in improving model performance.
 
-## Getting Started
+## Getting Started 🚀
 
-### Prerequisites
+### Prerequisites 📋
 
 Make sure you have the following software installed:
 - Python 3.x
 - git
 - Other dependencies listed in `requirements.txt`
 
-### Cloning the Repository
+### Cloning the Repository 🧩
 
 ```bash
 git clone https://github.com/yourusername/your-repo.git
@@ -30,19 +30,19 @@ mkdir results
 mkdir diagram
 ```
 
-### Download the Dataset
+### Download the Dataset 📦
 Download the DeepFashion dataset for attribute prediction from the [official website](https://mmlab.ie.cuhk.edu.hk/projects/DeepFashion/AttributePrediction.html). 
 
 Once downloaded, place the FashionDataset/ folder in the root directory of the project.
 
-### Installing Dependencies
+### Installing Dependencies 🛠️
 
 Install the required libraries using requirements.txt:
 ```
 pip install -r requirements.txt
 ```
 
-## Running the Project
+## Running the Project 🏃‍♂️
 
 You can run the training script using SLURM or directly with Python:
 
@@ -69,7 +69,7 @@ python main.py \
 --tuning_optuna --n_trials 15 --trial_epochs 30 \
 ```
 
-### Acknowldegements
+### Acknowldegements 🙏
 
 This project is a team-effort with my awesome colleagues from the AI6103 - Deep Learning and Applications class in the NTU MSAI program, 2024. Checkout their github profiles at:
 
