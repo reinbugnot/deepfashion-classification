@@ -3,3 +3,6 @@ FashionDataset_old/
 model_weights/
 results/
 diagram/
+main_old.py
+train_small.sh
+experiment_notes.txt
