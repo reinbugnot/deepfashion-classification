@@ -42,6 +42,9 @@ Install the required libraries using requirements.txt:
 pip install -r requirements.txt
 ```
 
+<br>
+
+
 ## Running the Project 🏃‍♂️
 
 You can run the training script using SLURM or directly with Python:
